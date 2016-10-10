@@ -10,6 +10,7 @@ namespace FourthExercise.Models
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Job Name")]
         public string Name { get; set; }
     }
 }

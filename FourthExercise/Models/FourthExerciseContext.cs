@@ -17,8 +17,10 @@ namespace FourthExercise.Models
     
         public FourthExerciseContext() : base("name=FourthExerciseContext")
         {
+            Database.SetInitializer<FourthExerciseContext>(new FourthExerciseInitializer());
         }
 
         public System.Data.Entity.DbSet<FourthExercise.Models.Employee> Employees { get; set; }
+        public System.Data.Entity.DbSet<FourthExercise.Models.JobRole> JobRoles { get; set; }
     }
 }

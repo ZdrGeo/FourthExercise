@@ -18,7 +18,8 @@ namespace FourthExercise.Controllers
         // GET: Employees
         public async Task<ActionResult> Index()
         {
-            return View(await fourthExerciseContext.Employees.ToListAsync());
+            var employees = fourthExerciseContext.Employees.Include(e => e.JobRole);
+            return View(await employees.ToListAsync());
         }
 
         // GET: Employees/Details/5
@@ -39,6 +40,7 @@ namespace FourthExercise.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
+            ViewBag.JobRoleId = new SelectList(fourthExerciseContext.JobRoles, "Id", "Name");
             return View();
         }
 
@@ -47,7 +49,7 @@ namespace FourthExercise.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,FirstName,LastName,Email,Salary")] Employee employee)
+        public async Task<ActionResult> Create([Bind(Include = "Id,FirstName,LastName,Email,JobRoleId,Salary")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -56,6 +58,7 @@ namespace FourthExercise.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.JobRoleId = new SelectList(fourthExerciseContext.JobRoles, "Id", "Name", employee.JobRoleId);
             return View(employee);
         }
 
@@ -71,6 +74,7 @@ namespace FourthExercise.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.JobRoleId = new SelectList(fourthExerciseContext.JobRoles, "Id", "Name", employee.JobRoleId);
             return View(employee);
         }
 
@@ -79,7 +83,7 @@ namespace FourthExercise.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,Salary")] Employee employee)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,JobRoleId,Salary")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -87,6 +91,7 @@ namespace FourthExercise.Controllers
                 await fourthExerciseContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.JobRoleId = new SelectList(fourthExerciseContext.JobRoles, "Id", "Name", employee.JobRoleId);
             return View(employee);
         }
 
