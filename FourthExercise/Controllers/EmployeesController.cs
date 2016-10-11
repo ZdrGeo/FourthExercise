@@ -81,25 +81,6 @@ namespace FourthExercise.Controllers
             return View(employees);
         }
 
-        /*
-        // GET: Employees
-        public async Task<ActionResult> Index()
-        {
-            IEnumerable<Employee> employees = new List<Employee>();
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    employeeRepository.Enlist(uow);
-                    employees = await employeeRepository.GetAllAsync();
-                    employeeRepository.Delist();
-                }
-            );
-
-            return View(employees);
-        }
-        */
-
         // GET: Employees/Details/5
         public async Task<ActionResult> Details(int? id, string currentName)
         {

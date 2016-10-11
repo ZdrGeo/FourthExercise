@@ -11,9 +11,8 @@ namespace FourthExercise.DataServices.Repositories
 {
     public interface IEmployeeRepository : IEnlistableRepository
     {
-        Task<IEnumerable<Employee>> GetAllAsync();
-        Task<Employee> GetAsync(int id);
         Task<IEnumerable<Employee>> FindWithNameAsync(string name);
+        Task<Employee> GetAsync(int id);
         Task AddAsync(Employee employee);
         Task SetAsync(Employee employee);
         Task RemoveAsync(Employee employee);

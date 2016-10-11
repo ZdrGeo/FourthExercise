@@ -16,7 +16,9 @@ namespace FourthExercise.DataServices.Entity.Repositories
     {
         public async Task<IEnumerable<JobRole>> GetAllAsync()
         {
-            return await UnitOfWork.JobRoles.ToListAsync();
+            return await UnitOfWork
+                .JobRoles
+                .ToListAsync();
         }
     }
 }
