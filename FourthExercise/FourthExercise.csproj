@@ -163,16 +163,13 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\FourthExerciseContext.cs" />
-    <Compile Include="Models\FourthExerciseInitializer.cs" />
-    <Compile Include="Models\JobRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -469,6 +466,20 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FourthExercise.DataServices.Entity\FourthExercise.DataServices.Entity.csproj">
+      <Project>{2f9fec6d-52d9-4bbc-af49-b35fdbc75ba7}</Project>
+      <Name>FourthExercise.DataServices.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FourthExercise.DataServices\FourthExercise.DataServices.csproj">
+      <Project>{9156f42d-7223-4b8b-b2c2-bb1b1c28065f}</Project>
+      <Name>FourthExercise.DataServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FourthExercise.Models\FourthExercise.Models.csproj">
+      <Project>{3414905d-5ead-4851-a535-9bb69afbb8c8}</Project>
+      <Name>FourthExercise.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

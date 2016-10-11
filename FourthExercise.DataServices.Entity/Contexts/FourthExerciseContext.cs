@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace FourthExercise.Models
+namespace FourthExercise.DataServices.Entity
 {
     public class FourthExerciseContext : DbContext
     {

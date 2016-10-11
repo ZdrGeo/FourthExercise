@@ -4,9 +4,11 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace FourthExercise.Models
+using FourthExercise.Models;
+
+namespace FourthExercise.DataServices.Entity
 {
-    public class FourthExerciseInitializer : DropCreateDatabaseIfModelChanges<FourthExerciseContext> // DropCreateDatabaseAlways<FourthExerciseContext>
+    public class FourthExerciseInitializer : DropCreateDatabaseIfModelChanges<FourthExerciseContext> // DropCreateDatabaseIfModelChanges<FourthExerciseContext> // DropCreateDatabaseAlways<FourthExerciseContext>
     {
         protected override void Seed(FourthExerciseContext context)
         {
