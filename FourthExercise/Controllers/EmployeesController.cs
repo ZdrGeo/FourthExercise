@@ -61,6 +61,27 @@ namespace FourthExercise.Controllers
             return jobRoles;
         }
 
+        public async Task<ActionResult> Index(string currentName, string name)
+        {
+            if (name == null) { name = currentName; }
+
+            IEnumerable<Employee> employees = new List<Employee>();
+
+            await unitOfWorkFactory.WithAsync(
+                async uow =>
+                {
+                    employeeRepository.Enlist(uow);
+                    employees = await employeeRepository.FindWithNameAsync(name);
+                    employeeRepository.Delist();
+                }
+            );
+
+            ViewBag.CurrentName = name;
+
+            return View(employees);
+        }
+
+        /*
         // GET: Employees
         public async Task<ActionResult> Index()
         {
@@ -77,9 +98,10 @@ namespace FourthExercise.Controllers
 
             return View(employees);
         }
+        */
 
         // GET: Employees/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
@@ -87,15 +109,19 @@ namespace FourthExercise.Controllers
 
             if (employee == null) { return HttpNotFound(); }
 
+            ViewBag.CurrentName = currentName;
+
             return View(employee);
         }
 
         // GET: Employees/Create
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create(string currentName)
         {
             IEnumerable<JobRole> jobRoles = await GetJobRolesAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoles, "Id", "Name");
+
+            ViewBag.CurrentName = currentName;
 
             return View();
         }
@@ -130,7 +156,7 @@ namespace FourthExercise.Controllers
         }
 
         // GET: Employees/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
@@ -141,6 +167,7 @@ namespace FourthExercise.Controllers
             IEnumerable<JobRole> jobRoles = await GetJobRolesAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoles, "Id", "Name", employee.JobRoleId);
+            ViewBag.CurrentName = currentName;
 
             return View(employee);
         }
@@ -175,13 +202,15 @@ namespace FourthExercise.Controllers
         }
 
         // GET: Employees/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
             Employee employee = await GetEmployeeAsync(id ?? 0);
 
             if (employee == null) { return HttpNotFound(); }
+
+            ViewBag.CurrentName = currentName;
 
             return View(employee);
         }

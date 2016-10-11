@@ -16,12 +16,27 @@ namespace FourthExercise.DataServices.Entity.Repositories
     {
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            return await UnitOfWork.Employees.Include(e => e.JobRole).ToListAsync();
+            return await UnitOfWork
+                .Employees
+                .Include(e => e.JobRole)
+                .ToListAsync();
         }
 
         public Task<Employee> GetAsync(int id)
         {
-            return UnitOfWork.Employees.FindAsync(id);
+            return UnitOfWork
+                .Employees
+                .Include(e => e.JobRole)
+                .SingleOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<IEnumerable<Employee>> FindWithNameAsync(string name)
+        {
+            return await UnitOfWork
+                .Employees
+                .Include(e => e.JobRole)
+                .Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name))
+                .ToListAsync();
         }
 
         public Task AddAsync(Employee employee)

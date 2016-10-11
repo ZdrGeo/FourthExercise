@@ -14,15 +14,6 @@ namespace FourthExercise.DataServices.Entity
         {
             using (FourthExerciseContext context = new FourthExerciseContext())
             {
-                /*
-                using (DbContextTransaction dbContextTransaction = context.Database.BeginTransaction())
-                {
-                    FourthExerciseUnitOfWork unitOfWork = new FourthExerciseUnitOfWork(context);
-
-                    await action(unitOfWork);
-                }
-                */
-
                 FourthExerciseUnitOfWork unitOfWork = new FourthExerciseUnitOfWork(context);
 
                 await action(unitOfWork);
