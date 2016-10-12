@@ -13,35 +13,44 @@ using FourthExercise.Infrastructure.Entity.Mappers;
 
 namespace FourthExercise.Infrastructure.Entity.Repositories
 {
-    public class EmployeeRepository : EnlistableRepository<FourthExerciseContext>, IReadEmployeeRepository, IWriteEmployeeRepository
+    public class EmployeeRepository : IReadEmployeeRepository, IWriteEmployeeRepository
     {
+        public EmployeeRepository(FourthExerciseContext context)
+        {
+            if (context == null) { throw new ArgumentNullException("context"); }
+
+            this.context = context;
+        }
+
+        private FourthExerciseContext context;
+
         public async Task<IEnumerable<EmployeeModel>> FindWithNameAsync(string name)
         {
-            var employees = UnitOfWork.Employees.Include(e => e.JobRole);
+            var employees = context.Employees.Include(e => e.JobRole);
 
             if (name != null)
             {
                 employees = employees.Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
             }
                 
-            return (await employees.ToListAsync()).Select(e => EmployeeMapper.MapEmployeeToModel(e));
+            return (await employees.AsNoTracking().ToListAsync()).Select(e => EmployeeMapper.MapEmployeeToModel(e));
         }
 
         public async Task<EmployeeModel> GetAsync(int id)
         {
-            return EmployeeMapper.MapEmployeeToModel(await UnitOfWork.Employees.Include(e => e.JobRole).SingleOrDefaultAsync(e => e.Id == id));
+            return EmployeeMapper.MapEmployeeToModel(await context.Employees.Include(e => e.JobRole).AsNoTracking().SingleOrDefaultAsync(e => e.Id == id));
         }
 
         public Task AddAsync(EmployeeModel employeeModel)
         {
-            UnitOfWork.Employees.Add(EmployeeMapper.MapModelToEmployee(employeeModel));
+            context.Employees.Add(EmployeeMapper.MapModelToEmployee(employeeModel));
 
             return Task.CompletedTask;
         }
 
         public Task SetAsync(EmployeeModel employeeModel)
         {
-            UnitOfWork.Entry(EmployeeMapper.MapModelToEmployee(employeeModel)).State = EntityState.Modified;
+            context.Entry(EmployeeMapper.MapModelToEmployee(employeeModel)).State = EntityState.Modified;
 
             return Task.CompletedTask;
         }
@@ -50,8 +59,8 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
         {
             Employee employee = EmployeeMapper.MapModelToEmployee(employeeModel);
 
-            UnitOfWork.Employees.Attach(employee);
-            UnitOfWork.Employees.Remove(employee);
+            context.Employees.Attach(employee);
+            context.Employees.Remove(employee);
 
             return Task.CompletedTask;
         }

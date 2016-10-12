@@ -10,14 +10,22 @@ namespace FourthExercise.Infrastructure.Entity
 {
     public class FourthExerciseUnitOfWorkFactory : IUnitOfWorkFactory
     {
-        public async Task WithAsync(Func<IUnitOfWork, Task> action)
+        public FourthExerciseUnitOfWorkFactory(FourthExerciseContext context)
         {
-            using (FourthExerciseContext context = new FourthExerciseContext())
-            {
-                FourthExerciseUnitOfWork unitOfWork = new FourthExerciseUnitOfWork(context);
+            if (context == null) { throw new ArgumentNullException("context"); }
 
-                await action(unitOfWork);
-            }
+            this.context = context;
+        }
+
+        private FourthExerciseContext context;
+
+        public async Task WithAsync(Func<UnitOfWork, Task> action)
+        {
+            UnitOfWork unitOfWork = new UnitOfWork();
+
+            await action(unitOfWork);
+
+            if (unitOfWork.IsCompleted) { await context.SaveChangesAsync(); }
         }
     }
 }

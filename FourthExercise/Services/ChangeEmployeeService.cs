@@ -12,27 +12,26 @@ namespace FourthExercise.Services
 {
     public class ChangeEmployeeService : IChangeEmployeeService
     {
-        public ChangeEmployeeService(IUnitOfWorkFactory unitOfWorkFactory, IWriteEmployeeRepository employeeRepository)
+        public ChangeEmployeeService(IUnitOfWorkFactory unitOfWorkFactory, IWriteEmployeeRepository writeEmployeeRepository)
         {
             if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
-            if (employeeRepository == null) { throw new ArgumentNullException("employeeRepository"); }
+            if (writeEmployeeRepository == null) { throw new ArgumentNullException("writeEmployeeRepository"); }
 
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.employeeRepository = employeeRepository;
+            this.writeEmployeeRepository = writeEmployeeRepository;
         }
 
         private IUnitOfWorkFactory unitOfWorkFactory;
-        private IWriteEmployeeRepository employeeRepository;
+        private IWriteEmployeeRepository writeEmployeeRepository;
 
         public async Task ChangeAsync(EmployeeModel employeeModel)
         {
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    employeeRepository.Enlist(uow);
-                    await employeeRepository.SetAsync(employeeModel);
-                    await uow.CompleteAsync();
-                    employeeRepository.Delist();
+                    await writeEmployeeRepository.SetAsync(employeeModel);
+
+                    uow.Complete();
                 }
             );
         }

@@ -8,7 +8,7 @@ using FourthExercise.Models;
 
 namespace FourthExercise.Infrastructure.Repositories
 {
-    public interface IWriteEmployeeRepository : IEnlistableRepository
+    public interface IWriteEmployeeRepository
     {
         Task AddAsync(EmployeeModel employeeModel);
         Task SetAsync(EmployeeModel employeeModel);

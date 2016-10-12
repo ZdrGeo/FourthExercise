@@ -50,9 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FourthExerciseUnitOfWorkFactory.cs" />
-    <Compile Include="Contexts\FourthExerciseContext.cs" />
-    <Compile Include="Contexts\FourthExerciseInitializer.cs" />
-    <Compile Include="FourthExerciseUnitOfWork.cs" />
+    <Compile Include="FourthExerciseContext.cs" />
+    <Compile Include="FourthExerciseInitializer.cs" />
     <Compile Include="Mappers\EmployeeMapper.cs" />
     <Compile Include="Mappers\JobRoleMapper.cs" />
     <Compile Include="Models\Employee.cs" />
@@ -75,9 +74,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UnitOfWorks\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

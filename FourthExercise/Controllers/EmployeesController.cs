@@ -17,7 +17,6 @@ namespace FourthExercise.Controllers
     public class EmployeesController : Controller
     {
         public EmployeesController(
-            IUnitOfWorkFactory unitOfWorkFactory,
             IReadJobRoleRepository readJobRoleRepository,
             IReadEmployeeRepository readEmployeeRepository,
             ICreateEmployeeService createEmployeeService,
@@ -25,14 +24,12 @@ namespace FourthExercise.Controllers
             IDeleteEmployeeService deleteEmployeeService
         )
         {
-            if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
             if (readJobRoleRepository == null) { throw new ArgumentNullException("readJobRoleRepository"); }
             if (readEmployeeRepository == null) { throw new ArgumentNullException("readEmployeeRepository"); }
             if (createEmployeeService == null) { throw new ArgumentNullException("createEmployeeService"); }
             if (changeEmployeeService == null) { throw new ArgumentNullException("changeEmployeeService"); }
             if (deleteEmployeeService == null) { throw new ArgumentNullException("deleteEmployeeService"); }
 
-            this.unitOfWorkFactory = unitOfWorkFactory;
             this.readJobRoleRepository = readJobRoleRepository;
             this.readEmployeeRepository = readEmployeeRepository;
             this.createEmployeeService = createEmployeeService;
@@ -40,70 +37,17 @@ namespace FourthExercise.Controllers
             this.deleteEmployeeService = deleteEmployeeService;
         }
 
-        private IUnitOfWorkFactory unitOfWorkFactory;
         private IReadJobRoleRepository readJobRoleRepository;
         private IReadEmployeeRepository readEmployeeRepository;
         private ICreateEmployeeService createEmployeeService;
         private IChangeEmployeeService changeEmployeeService;
         private IDeleteEmployeeService deleteEmployeeService;
 
-        #region
-
-        private async Task<IEnumerable<JobRoleModel>> GetJobRolesAsync()
-        {
-            IEnumerable<JobRoleModel> jobRoleModels = new List<JobRoleModel>();
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    readJobRoleRepository.Enlist(uow);
-                    jobRoleModels = await readJobRoleRepository.GetAllAsync();
-                    readJobRoleRepository.Delist();
-                }
-            );
-
-            return jobRoleModels;
-        }
-
-        private async Task<IEnumerable<EmployeeModel>> FindEmployeesWithNameAsync(string name)
-        {
-            IEnumerable<EmployeeModel> employeeModels = new List<EmployeeModel>();
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    readEmployeeRepository.Enlist(uow);
-                    employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
-                    readEmployeeRepository.Delist();
-                }
-            );
-
-            return employeeModels;
-        }
-
-        private async Task<EmployeeModel> GetEmployeeAsync(int id)
-        {
-            EmployeeModel employeeModel = null;
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    readEmployeeRepository.Enlist(uow);
-                    employeeModel = await readEmployeeRepository.GetAsync(id);
-                    readEmployeeRepository.Delist();
-                }
-            );
-
-            return employeeModel;
-        }
-
-        #endregion
-
         public async Task<ActionResult> Index(string currentName, string name)
         {
             if (name == null) { name = currentName; }
 
-            IEnumerable<EmployeeModel> employeeModels = await FindEmployeesWithNameAsync(name);
+            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
 
             ViewBag.CurrentName = name;
 
@@ -114,7 +58,7 @@ namespace FourthExercise.Controllers
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
-            EmployeeModel employeeModel = await GetEmployeeAsync(id ?? 0);
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(id ?? 0);
 
             if (employeeModel == null) { return HttpNotFound(); }
 
@@ -125,7 +69,7 @@ namespace FourthExercise.Controllers
 
         public async Task<ActionResult> Create(string currentName)
         {
-            IEnumerable<JobRoleModel> jobRoleModels = await GetJobRolesAsync();
+            IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoleModels, "Id", "Name");
             ViewBag.CurrentName = currentName;
@@ -144,7 +88,7 @@ namespace FourthExercise.Controllers
                 return RedirectToAction("Index");
             }
 
-            IEnumerable<JobRoleModel> jobRoleModels = await GetJobRolesAsync();
+            IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoleModels, "Id", "Name", employeeModel.JobRoleId);
 
@@ -155,11 +99,11 @@ namespace FourthExercise.Controllers
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
-            EmployeeModel employeeModel = await GetEmployeeAsync(id ?? 0);
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(id ?? 0);
 
             if (employeeModel == null) { return HttpNotFound(); }
 
-            IEnumerable<JobRoleModel> jobRoleModels = await GetJobRolesAsync();
+            IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoleModels, "Id", "Name", employeeModel.JobRoleId);
             ViewBag.CurrentName = currentName;
@@ -178,7 +122,7 @@ namespace FourthExercise.Controllers
                 return RedirectToAction("Index");
             }
 
-            IEnumerable<JobRoleModel> jobRoleModels = await GetJobRolesAsync();
+            IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
             ViewBag.JobRoleId = new SelectList(jobRoleModels, "Id", "Name", employeeModel.JobRoleId);
 
@@ -189,7 +133,7 @@ namespace FourthExercise.Controllers
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
 
-            EmployeeModel employeeModel = await GetEmployeeAsync(id ?? 0);
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(id ?? 0);
 
             if (employeeModel == null) { return HttpNotFound(); }
 
@@ -202,7 +146,7 @@ namespace FourthExercise.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            EmployeeModel employeeModel = await GetEmployeeAsync(id);
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(id);
 
             await deleteEmployeeService.DeleteAsync(employeeModel);
 

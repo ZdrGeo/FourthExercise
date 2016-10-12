@@ -8,16 +8,24 @@ using System.Data.Entity;
 
 using FourthExercise.Models;
 using FourthExercise.Infrastructure.Repositories;
-using FourthExercise.Infrastructure.Entity.Models;
 using FourthExercise.Infrastructure.Entity.Mappers;
 
 namespace FourthExercise.Infrastructure.Entity.Repositories
 {
-    public class JobRoleRepository : EnlistableRepository<FourthExerciseContext>, IReadJobRoleRepository
+    public class JobRoleRepository : IReadJobRoleRepository
     {
+        public JobRoleRepository(FourthExerciseContext context)
+        {
+            if (context == null) { throw new ArgumentNullException("context"); }
+
+            this.context = context;
+        }
+
+        private FourthExerciseContext context;
+
         public async Task<IEnumerable<JobRoleModel>> GetAllAsync()
         {
-            return (await UnitOfWork.JobRoles.ToListAsync()).Select(jr => JobRoleMapper.MapJobRoleToModel(jr));
+            return (await context.JobRoles.AsNoTracking().ToListAsync()).Select(jr => JobRoleMapper.MapJobRoleToModel(jr));
         }
     }
 }

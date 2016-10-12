@@ -27,10 +27,10 @@ namespace FourthExercise
             containerBuilder.RegisterSource(new ViewRegistrationSource());
             containerBuilder.RegisterFilterProvider();
 
+            containerBuilder.RegisterType<FourthExerciseContext>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<FourthExerciseUnitOfWorkFactory>().As<IUnitOfWorkFactory>();
             containerBuilder.RegisterType<JobRoleRepository>().As<IReadJobRoleRepository>();
-            containerBuilder.RegisterType<EmployeeRepository>().As<IReadEmployeeRepository>();
-            containerBuilder.RegisterType<EmployeeRepository>().As<IWriteEmployeeRepository>();
+            containerBuilder.RegisterType<EmployeeRepository>().As<IReadEmployeeRepository>().As<IWriteEmployeeRepository>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<CreateEmployeeService>().As<ICreateEmployeeService>();
             containerBuilder.RegisterType<ChangeEmployeeService>().As<IChangeEmployeeService>();
             containerBuilder.RegisterType<DeleteEmployeeService>().As<IDeleteEmployeeService>();

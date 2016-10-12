@@ -15,29 +15,20 @@ namespace FourthExercise.Tests
     [TestClass]
     public class JobRoleRepositoryTest
     {
-        private IUnitOfWorkFactory unitOfWorkFactory;
         private IReadJobRoleRepository readJobRoleRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            unitOfWorkFactory = new FourthExerciseUnitOfWorkFactory();
-            readJobRoleRepository = new JobRoleRepository();
+            FourthExerciseContext context = new FourthExerciseContext();
+
+            readJobRoleRepository = new JobRoleRepository(context);
         }
 
         [TestMethod]
-        public async Task TestChange()
+        public async Task TestGetAll()
         {
-            IEnumerable<JobRoleModel> jobRoleModels = new List<JobRoleModel>();
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    readJobRoleRepository.Enlist(uow);
-                    jobRoleModels = await readJobRoleRepository.GetAllAsync();
-                    readJobRoleRepository.Delist();
-                }
-            );
+            IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
             Assert.AreEqual(3, jobRoleModels.ToList().Count);
         }

@@ -8,6 +8,6 @@ namespace FourthExercise.Infrastructure
 {
     public interface IUnitOfWorkFactory
     {
-        Task WithAsync(Func<IUnitOfWork, Task> action);
+        Task WithAsync(Func<UnitOfWork, Task> action);
     }
 }

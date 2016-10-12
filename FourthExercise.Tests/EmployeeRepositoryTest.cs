@@ -19,29 +19,78 @@ namespace FourthExercise.Tests
 
         private IUnitOfWorkFactory unitOfWorkFactory;
         private IReadEmployeeRepository readEmployeeRepository;
+        private IWriteEmployeeRepository writeEmployeeRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            unitOfWorkFactory = new FourthExerciseUnitOfWorkFactory();
-            readEmployeeRepository = new EmployeeRepository();
+            FourthExerciseContext context = new FourthExerciseContext();
+
+            unitOfWorkFactory = new FourthExerciseUnitOfWorkFactory(context);
+
+            EmployeeRepository employeeRepository = new EmployeeRepository(context);
+
+            readEmployeeRepository = employeeRepository;
+            writeEmployeeRepository = employeeRepository;
         }
 
         [TestMethod]
-        public async Task TestChange()
+        public async Task TestFindWithName()
         {
-            IEnumerable<EmployeeModel> employeeModels = new List<EmployeeModel>();
+            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
+
+            Assert.AreEqual(0, employeeModels.ToList().Count);
+        }
+
+        [TestMethod]
+        public async Task TestAdd()
+        {
+            EmployeeModel employeeModel = new EmployeeModel();
 
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    readEmployeeRepository.Enlist(uow);
-                    employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
-                    readEmployeeRepository.Delist();
+                    await writeEmployeeRepository.AddAsync(employeeModel);
+
+                    uow.Complete();
                 }
             );
 
-            Assert.AreEqual(0, employeeModels.ToList().Count);
+            // ...
+        }
+
+        [TestMethod]
+        public async Task TestSet()
+        {
+            EmployeeModel employeeModel = new EmployeeModel();
+
+            await unitOfWorkFactory.WithAsync(
+                async uow =>
+                {
+                    await writeEmployeeRepository.SetAsync(employeeModel);
+
+                    uow.Complete();
+                }
+            );
+
+            // ...
+        }
+
+        [TestMethod]
+        public async Task TestRemove()
+        {
+            EmployeeModel employeeModel = new EmployeeModel();
+
+            await unitOfWorkFactory.WithAsync(
+                async uow =>
+                {
+                    await writeEmployeeRepository.RemoveAsync(employeeModel);
+
+                    uow.Complete();
+                }
+            );
+
+            // ...
         }
     }
 }

@@ -9,7 +9,7 @@ using FourthExercise.Infrastructure;
 
 namespace FourthExercise.Infrastructure.Repositories
 {
-    public interface IReadEmployeeRepository : IEnlistableRepository
+    public interface IReadEmployeeRepository
     {
         Task<IEnumerable<EmployeeModel>> FindWithNameAsync(string name);
         Task<EmployeeModel> GetAsync(int id);

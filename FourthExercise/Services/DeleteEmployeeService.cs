@@ -12,27 +12,26 @@ namespace FourthExercise.Services
 {
     public class DeleteEmployeeService : IDeleteEmployeeService
     {
-        public DeleteEmployeeService(IUnitOfWorkFactory unitOfWorkFactory, IWriteEmployeeRepository employeeRepository)
+        public DeleteEmployeeService(IUnitOfWorkFactory unitOfWorkFactory, IWriteEmployeeRepository writeEmployeeRepository)
         {
             if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
-            if (employeeRepository == null) { throw new ArgumentNullException("employeeRepository"); }
+            if (writeEmployeeRepository == null) { throw new ArgumentNullException("writeEmployeeRepository"); }
 
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.employeeRepository = employeeRepository;
+            this.writeEmployeeRepository = writeEmployeeRepository;
         }
 
         private IUnitOfWorkFactory unitOfWorkFactory;
-        private IWriteEmployeeRepository employeeRepository;
+        private IWriteEmployeeRepository writeEmployeeRepository;
 
         public async Task DeleteAsync(EmployeeModel employeeModel)
         {
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    employeeRepository.Enlist(uow);
-                    await employeeRepository.RemoveAsync(employeeModel);
-                    await uow.CompleteAsync();
-                    employeeRepository.Delist();
+                    await writeEmployeeRepository.RemoveAsync(employeeModel);
+
+                    uow.Complete();
                 }
             );
         }

@@ -8,7 +8,7 @@ using FourthExercise.Models;
 
 namespace FourthExercise.Infrastructure.Repositories
 {
-    public interface IReadJobRoleRepository : IEnlistableRepository
+    public interface IReadJobRoleRepository
     {
         Task<IEnumerable<JobRoleModel>> GetAllAsync();
     }
