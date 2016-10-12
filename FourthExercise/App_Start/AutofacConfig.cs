@@ -7,10 +7,10 @@ using Autofac;
 using Autofac.Integration.Mvc;
 
 using FourthExercise.Services;
-using FourthExercise.DataServices;
-using FourthExercise.DataServices.Repositories;
-using FourthExercise.DataServices.Entity.Repositories;
-using FourthExercise.DataServices.Entity;
+using FourthExercise.Infrastructure;
+using FourthExercise.Infrastructure.Repositories;
+using FourthExercise.Infrastructure.Entity;
+using FourthExercise.Infrastructure.Entity.Repositories;
 
 namespace FourthExercise
 {
@@ -28,8 +28,9 @@ namespace FourthExercise
             containerBuilder.RegisterFilterProvider();
 
             containerBuilder.RegisterType<FourthExerciseUnitOfWorkFactory>().As<IUnitOfWorkFactory>();
-            containerBuilder.RegisterType<JobRoleRepository>().As<IJobRoleRepository>();
-            containerBuilder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
+            containerBuilder.RegisterType<JobRoleRepository>().As<IReadJobRoleRepository>();
+            containerBuilder.RegisterType<EmployeeRepository>().As<IReadEmployeeRepository>();
+            containerBuilder.RegisterType<EmployeeRepository>().As<IWriteEmployeeRepository>();
             containerBuilder.RegisterType<CreateEmployeeService>().As<ICreateEmployeeService>();
             containerBuilder.RegisterType<ChangeEmployeeService>().As<IChangeEmployeeService>();
             containerBuilder.RegisterType<DeleteEmployeeService>().As<IDeleteEmployeeService>();

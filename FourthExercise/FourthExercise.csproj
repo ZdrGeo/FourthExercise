@@ -171,6 +171,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ChangeEmployeeService.cs" />
+    <Compile Include="Services\CreateEmployeeService.cs" />
+    <Compile Include="Services\DeleteEmployeeService.cs" />
+    <Compile Include="Services\IChangeEmployeeService.cs" />
+    <Compile Include="Services\ICreateEmployeeService.cs" />
+    <Compile Include="Services\IDeleteEmployeeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -468,21 +474,17 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FourthExercise.DataServices.Entity\FourthExercise.DataServices.Entity.csproj">
+    <ProjectReference Include="..\FourthExercise.Infrastructure.Entity\FourthExercise.Infrastructure.Entity.csproj">
       <Project>{2f9fec6d-52d9-4bbc-af49-b35fdbc75ba7}</Project>
-      <Name>FourthExercise.DataServices.Entity</Name>
+      <Name>FourthExercise.Infrastructure.Entity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FourthExercise.DataServices\FourthExercise.DataServices.csproj">
+    <ProjectReference Include="..\FourthExercise.Infrastructure\FourthExercise.Infrastructure.csproj">
       <Project>{9156f42d-7223-4b8b-b2c2-bb1b1c28065f}</Project>
-      <Name>FourthExercise.DataServices</Name>
+      <Name>FourthExercise.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\FourthExercise.Models\FourthExercise.Models.csproj">
       <Project>{3414905d-5ead-4851-a535-9bb69afbb8c8}</Project>
       <Name>FourthExercise.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FourthExercise.Services\FourthExercise.Services.csproj">
-      <Project>{bcfb7636-a1a0-4603-bc9f-edf0fc0a086e}</Project>
-      <Name>FourthExercise.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

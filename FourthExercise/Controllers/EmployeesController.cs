@@ -9,8 +9,8 @@ using System.Web.Mvc;
 
 using FourthExercise.Models;
 using FourthExercise.Services;
-using FourthExercise.DataServices;
-using FourthExercise.DataServices.Repositories;
+using FourthExercise.Infrastructure;
+using FourthExercise.Infrastructure.Repositories;
 
 namespace FourthExercise.Controllers
 {
@@ -18,31 +18,31 @@ namespace FourthExercise.Controllers
     {
         public EmployeesController(
             IUnitOfWorkFactory unitOfWorkFactory,
-            IJobRoleRepository jobRoleRepository,
-            IEmployeeRepository employeeRepository,
+            IReadJobRoleRepository readJobRoleRepository,
+            IReadEmployeeRepository readEmployeeRepository,
             ICreateEmployeeService createEmployeeService,
             IChangeEmployeeService changeEmployeeService,
             IDeleteEmployeeService deleteEmployeeService
         )
         {
             if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
-            if (jobRoleRepository == null) { throw new ArgumentNullException("jobRoleRepository"); }
-            if (employeeRepository == null) { throw new ArgumentNullException("employeeRepository"); }
+            if (readJobRoleRepository == null) { throw new ArgumentNullException("readJobRoleRepository"); }
+            if (readEmployeeRepository == null) { throw new ArgumentNullException("readEmployeeRepository"); }
             if (createEmployeeService == null) { throw new ArgumentNullException("createEmployeeService"); }
             if (changeEmployeeService == null) { throw new ArgumentNullException("changeEmployeeService"); }
             if (deleteEmployeeService == null) { throw new ArgumentNullException("deleteEmployeeService"); }
 
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.jobRoleRepository = jobRoleRepository;
-            this.employeeRepository = employeeRepository;
+            this.readJobRoleRepository = readJobRoleRepository;
+            this.readEmployeeRepository = readEmployeeRepository;
             this.createEmployeeService = createEmployeeService;
             this.changeEmployeeService = changeEmployeeService;
             this.deleteEmployeeService = deleteEmployeeService;
         }
 
         private IUnitOfWorkFactory unitOfWorkFactory;
-        private IJobRoleRepository jobRoleRepository;
-        private IEmployeeRepository employeeRepository;
+        private IReadJobRoleRepository readJobRoleRepository;
+        private IReadEmployeeRepository readEmployeeRepository;
         private ICreateEmployeeService createEmployeeService;
         private IChangeEmployeeService changeEmployeeService;
         private IDeleteEmployeeService deleteEmployeeService;
@@ -56,9 +56,9 @@ namespace FourthExercise.Controllers
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    jobRoleRepository.Enlist(uow);
-                    jobRoles = await jobRoleRepository.GetAllAsync();
-                    jobRoleRepository.Delist();
+                    readJobRoleRepository.Enlist(uow);
+                    jobRoles = await readJobRoleRepository.GetAllAsync();
+                    readJobRoleRepository.Delist();
                 }
             );
 
@@ -72,9 +72,9 @@ namespace FourthExercise.Controllers
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    employeeRepository.Enlist(uow);
-                    employees = await employeeRepository.FindWithNameAsync(name);
-                    employeeRepository.Delist();
+                    readEmployeeRepository.Enlist(uow);
+                    employees = await readEmployeeRepository.FindWithNameAsync(name);
+                    readEmployeeRepository.Delist();
                 }
             );
 
@@ -88,9 +88,9 @@ namespace FourthExercise.Controllers
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
-                    employeeRepository.Enlist(uow);
-                    employee = await employeeRepository.GetAsync(id);
-                    employeeRepository.Delist();
+                    readEmployeeRepository.Enlist(uow);
+                    employee = await readEmployeeRepository.GetAsync(id);
+                    readEmployeeRepository.Delist();
                 }
             );
 
@@ -110,7 +110,6 @@ namespace FourthExercise.Controllers
             return View(employees);
         }
 
-        // GET: Employees/Details/5
         public async Task<ActionResult> Details(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
@@ -124,7 +123,6 @@ namespace FourthExercise.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Create
         public async Task<ActionResult> Create(string currentName)
         {
             IEnumerable<JobRole> jobRoles = await GetJobRolesAsync();
@@ -136,9 +134,6 @@ namespace FourthExercise.Controllers
             return View();
         }
 
-        // POST: Employees/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,FirstName,LastName,Email,JobRoleId,Salary")] Employee employee)
@@ -157,7 +152,6 @@ namespace FourthExercise.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Edit/5
         public async Task<ActionResult> Edit(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
@@ -174,9 +168,6 @@ namespace FourthExercise.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,FirstName,LastName,Email,JobRoleId,Salary")] Employee employee)
@@ -195,7 +186,6 @@ namespace FourthExercise.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
         public async Task<ActionResult> Delete(int? id, string currentName)
         {
             if (id == null) { return new HttpStatusCodeResult(HttpStatusCode.BadRequest); }
@@ -209,7 +199,6 @@ namespace FourthExercise.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
