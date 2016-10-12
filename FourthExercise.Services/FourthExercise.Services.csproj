@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2B104C83-1532-4AB4-A53C-754A07CFF1ED}</ProjectGuid>
+    <ProjectGuid>{BCFB7636-A1A0-4603-BC9F-EDF0FC0A086E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FourthExercise.Services</RootNamespace>
@@ -40,10 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEmployeeService.cs" />
+    <Compile Include="ChangeEmployeeService.cs" />
+    <Compile Include="DeleteEmployeeService.cs" />
+    <Compile Include="CreateEmployeeService.cs" />
+    <Compile Include="IChangeEmployeeService.cs" />
+    <Compile Include="IDeleteEmployeeService.cs" />
+    <Compile Include="ICreateEmployeeService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FourthExercise.DataServices\FourthExercise.DataServices.csproj">
+      <Project>{9156f42d-7223-4b8b-b2c2-bb1b1c28065f}</Project>
+      <Name>FourthExercise.DataServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FourthExercise.Models\FourthExercise.Models.csproj">
       <Project>{3414905d-5ead-4851-a535-9bb69afbb8c8}</Project>
       <Name>FourthExercise.Models</Name>

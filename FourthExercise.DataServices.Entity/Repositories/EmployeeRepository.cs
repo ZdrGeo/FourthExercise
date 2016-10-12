@@ -47,6 +47,7 @@ namespace FourthExercise.DataServices.Entity.Repositories
 
         public Task RemoveAsync(Employee employee)
         {
+            UnitOfWork.Employees.Attach(employee);
             UnitOfWork.Employees.Remove(employee);
 
             return Task.FromResult(1);

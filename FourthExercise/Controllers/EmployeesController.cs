@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+
 using FourthExercise.Models;
+using FourthExercise.Services;
 using FourthExercise.DataServices;
 using FourthExercise.DataServices.Repositories;
 
@@ -14,36 +16,38 @@ namespace FourthExercise.Controllers
 {
     public class EmployeesController : Controller
     {
-        public EmployeesController(IUnitOfWorkFactory unitOfWorkFactory, IEmployeeRepository employeeRepository, IJobRoleRepository jobRoleRepository)
+        public EmployeesController(
+            IUnitOfWorkFactory unitOfWorkFactory,
+            IJobRoleRepository jobRoleRepository,
+            IEmployeeRepository employeeRepository,
+            ICreateEmployeeService createEmployeeService,
+            IChangeEmployeeService changeEmployeeService,
+            IDeleteEmployeeService deleteEmployeeService
+        )
         {
             if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
-            if (employeeRepository == null) { throw new ArgumentNullException("employeeRepository"); }
             if (jobRoleRepository == null) { throw new ArgumentNullException("jobRoleRepository"); }
+            if (employeeRepository == null) { throw new ArgumentNullException("employeeRepository"); }
+            if (createEmployeeService == null) { throw new ArgumentNullException("createEmployeeService"); }
+            if (changeEmployeeService == null) { throw new ArgumentNullException("changeEmployeeService"); }
+            if (deleteEmployeeService == null) { throw new ArgumentNullException("deleteEmployeeService"); }
 
             this.unitOfWorkFactory = unitOfWorkFactory;
-            this.employeeRepository = employeeRepository;
             this.jobRoleRepository = jobRoleRepository;
+            this.employeeRepository = employeeRepository;
+            this.createEmployeeService = createEmployeeService;
+            this.changeEmployeeService = changeEmployeeService;
+            this.deleteEmployeeService = deleteEmployeeService;
         }
 
         private IUnitOfWorkFactory unitOfWorkFactory;
-        private IEmployeeRepository employeeRepository;
         private IJobRoleRepository jobRoleRepository;
+        private IEmployeeRepository employeeRepository;
+        private ICreateEmployeeService createEmployeeService;
+        private IChangeEmployeeService changeEmployeeService;
+        private IDeleteEmployeeService deleteEmployeeService;
 
-        private async Task<Employee> GetEmployeeAsync(int id)
-        {
-            Employee employee = null;
-
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    employeeRepository.Enlist(uow);
-                    employee = await employeeRepository.GetAsync(id);
-                    employeeRepository.Delist();
-                }
-            );
-
-            return employee;
-        }
+        #region
 
         private async Task<IEnumerable<JobRole>> GetJobRolesAsync()
         {
@@ -61,10 +65,8 @@ namespace FourthExercise.Controllers
             return jobRoles;
         }
 
-        public async Task<ActionResult> Index(string currentName, string name)
+        private async Task<IEnumerable<Employee>> FindEmployeesWithNameAsync(string name)
         {
-            if (name == null) { name = currentName; }
-
             IEnumerable<Employee> employees = new List<Employee>();
 
             await unitOfWorkFactory.WithAsync(
@@ -75,6 +77,33 @@ namespace FourthExercise.Controllers
                     employeeRepository.Delist();
                 }
             );
+
+            return employees;
+        }
+
+        private async Task<Employee> GetEmployeeAsync(int id)
+        {
+            Employee employee = null;
+
+            await unitOfWorkFactory.WithAsync(
+                async uow =>
+                {
+                    employeeRepository.Enlist(uow);
+                    employee = await employeeRepository.GetAsync(id);
+                    employeeRepository.Delist();
+                }
+            );
+
+            return employee;
+        }
+
+        #endregion
+
+        public async Task<ActionResult> Index(string currentName, string name)
+        {
+            if (name == null) { name = currentName; }
+
+            IEnumerable<Employee> employees = await FindEmployeesWithNameAsync(name);
 
             ViewBag.CurrentName = name;
 
@@ -116,15 +145,7 @@ namespace FourthExercise.Controllers
         {
             if (ModelState.IsValid)
             {
-                await unitOfWorkFactory.WithAsync(
-                    async uow =>
-                    {
-                        employeeRepository.Enlist(uow);
-                        await employeeRepository.AddAsync(employee);
-                        await uow.CompleteAsync();
-                        employeeRepository.Delist();
-                    }
-                );
+                await createEmployeeService.CreateAsync(employee);
 
                 return RedirectToAction("Index");
             }
@@ -162,15 +183,7 @@ namespace FourthExercise.Controllers
         {
             if (ModelState.IsValid)
             {
-                await unitOfWorkFactory.WithAsync(
-                    async uow =>
-                    {
-                        employeeRepository.Enlist(uow);
-                        await employeeRepository.SetAsync(employee);
-                        await uow.CompleteAsync();
-                        employeeRepository.Delist();
-                    }
-                );
+                await changeEmployeeService.ChangeAsync(employee);
 
                 return RedirectToAction("Index");
             }
@@ -201,16 +214,9 @@ namespace FourthExercise.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await unitOfWorkFactory.WithAsync(
-                async uow =>
-                {
-                    employeeRepository.Enlist(uow);
-                    Employee employee = await employeeRepository.GetAsync(id);
-                    await employeeRepository.RemoveAsync(employee);
-                    await uow.CompleteAsync();
-                    employeeRepository.Delist();
-                }
-            );
+            Employee employee = await GetEmployeeAsync(id);
+
+            await deleteEmployeeService.DeleteAsync(employee);
 
             return RedirectToAction("Index");
         }

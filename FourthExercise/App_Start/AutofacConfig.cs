@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+
+using FourthExercise.Services;
 using FourthExercise.DataServices;
 using FourthExercise.DataServices.Repositories;
 using FourthExercise.DataServices.Entity.Repositories;
@@ -25,9 +27,12 @@ namespace FourthExercise
             containerBuilder.RegisterSource(new ViewRegistrationSource());
             containerBuilder.RegisterFilterProvider();
 
-            containerBuilder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
-            containerBuilder.RegisterType<JobRoleRepository>().As<IJobRoleRepository>();
             containerBuilder.RegisterType<FourthExerciseUnitOfWorkFactory>().As<IUnitOfWorkFactory>();
+            containerBuilder.RegisterType<JobRoleRepository>().As<IJobRoleRepository>();
+            containerBuilder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>();
+            containerBuilder.RegisterType<CreateEmployeeService>().As<ICreateEmployeeService>();
+            containerBuilder.RegisterType<ChangeEmployeeService>().As<IChangeEmployeeService>();
+            containerBuilder.RegisterType<DeleteEmployeeService>().As<IDeleteEmployeeService>();
 
             IContainer container = containerBuilder.Build();
 

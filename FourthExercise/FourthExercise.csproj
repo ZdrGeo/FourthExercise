@@ -480,6 +480,10 @@
       <Project>{3414905d-5ead-4851-a535-9bb69afbb8c8}</Project>
       <Name>FourthExercise.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FourthExercise.Services\FourthExercise.Services.csproj">
+      <Project>{bcfb7636-a1a0-4603-bc9f-edf0fc0a086e}</Project>
+      <Name>FourthExercise.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
