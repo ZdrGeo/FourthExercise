@@ -24,13 +24,13 @@ namespace FourthExercise.Services
         private IUnitOfWorkFactory unitOfWorkFactory;
         private IWriteEmployeeRepository employeeRepository;
 
-        public async Task CreateAsync(Employee employee)
+        public async Task CreateAsync(EmployeeModel employeeModel)
         {
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
                     employeeRepository.Enlist(uow);
-                    await employeeRepository.AddAsync(employee);
+                    await employeeRepository.AddAsync(employeeModel);
                     await uow.CompleteAsync();
                     employeeRepository.Delist();
                 }

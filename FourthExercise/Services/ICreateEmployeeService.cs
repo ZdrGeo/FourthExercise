@@ -10,6 +10,6 @@ namespace FourthExercise.Services
 {
     public interface ICreateEmployeeService
     {
-        Task CreateAsync(Employee employee);
+        Task CreateAsync(EmployeeModel employeeModel);
     }
 }

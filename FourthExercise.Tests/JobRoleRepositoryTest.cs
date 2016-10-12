@@ -28,18 +28,18 @@ namespace FourthExercise.Tests
         [TestMethod]
         public async Task TestChange()
         {
-            IEnumerable<JobRole> jobRoles = new List<JobRole>();
+            IEnumerable<JobRoleModel> jobRoleModels = new List<JobRoleModel>();
 
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
                     readJobRoleRepository.Enlist(uow);
-                    jobRoles = await readJobRoleRepository.GetAllAsync();
+                    jobRoleModels = await readJobRoleRepository.GetAllAsync();
                     readJobRoleRepository.Delist();
                 }
             );
 
-            Assert.AreEqual(3, jobRoles.ToList().Count);
+            Assert.AreEqual(3, jobRoleModels.ToList().Count);
         }
     }
 }

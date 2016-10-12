@@ -4,15 +4,15 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-using FourthExercise.Models;
+using FourthExercise.Infrastructure.Entity.Models;
 
 namespace FourthExercise.Infrastructure.Entity
 {
     public class FourthExerciseContext : DbContext
     {
-        public FourthExerciseContext() : base("name=FourthExerciseContext")
+        public FourthExerciseContext() : base("name=FourthExercise")
         {
-            Database.SetInitializer<FourthExerciseContext>(new FourthExerciseInitializer());
+            Database.SetInitializer(new FourthExerciseInitializer());
         }
 
         public DbSet<Employee> Employees { get; set; }

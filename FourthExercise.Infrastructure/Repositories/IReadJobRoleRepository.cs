@@ -10,6 +10,6 @@ namespace FourthExercise.Infrastructure.Repositories
 {
     public interface IReadJobRoleRepository : IEnlistableRepository
     {
-        Task<IEnumerable<JobRole>> GetAllAsync();
+        Task<IEnumerable<JobRoleModel>> GetAllAsync();
     }
 }

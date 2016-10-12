@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FourthExercise.Models
 {
-    public class JobRole
+    public class JobRoleModel
     {
         public int Id { get; set; }
         [Display(Name = "Job Name")]

@@ -10,6 +10,6 @@ namespace FourthExercise.Services
 {
     public interface IChangeEmployeeService
     {
-        Task ChangeAsync(Employee employee);
+        Task ChangeAsync(EmployeeModel employeeModel);
     }
 }

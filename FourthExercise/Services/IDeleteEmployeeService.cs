@@ -10,6 +10,6 @@ namespace FourthExercise.Services
 {
     public interface IDeleteEmployeeService
     {
-        Task DeleteAsync(Employee employee);
+        Task DeleteAsync(EmployeeModel employeeModel);
     }
 }

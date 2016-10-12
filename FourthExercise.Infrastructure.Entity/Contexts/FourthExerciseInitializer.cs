@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-using FourthExercise.Models;
+using FourthExercise.Infrastructure.Entity.Models;
 
 namespace FourthExercise.Infrastructure.Entity
 {

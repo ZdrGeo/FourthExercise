@@ -7,14 +7,15 @@ using System.Data;
 using System.Data.Entity;
 
 using FourthExercise.Models;
-using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
+using FourthExercise.Infrastructure.Entity.Models;
+using FourthExercise.Infrastructure.Entity.Mappers;
 
 namespace FourthExercise.Infrastructure.Entity.Repositories
 {
     public class EmployeeRepository : EnlistableRepository<FourthExerciseContext>, IReadEmployeeRepository, IWriteEmployeeRepository
     {
-        public async Task<IEnumerable<Employee>> FindWithNameAsync(string name)
+        public async Task<IEnumerable<EmployeeModel>> FindWithNameAsync(string name)
         {
             var employees = UnitOfWork.Employees.Include(e => e.JobRole);
 
@@ -23,34 +24,36 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
                 employees = employees.Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
             }
                 
-            return await employees.ToListAsync();
+            return (await employees.ToListAsync()).Select(e => EmployeeMapper.MapEmployeeToModel(e));
         }
 
-        public Task<Employee> GetAsync(int id)
+        public async Task<EmployeeModel> GetAsync(int id)
         {
-            return UnitOfWork.Employees.Include(e => e.JobRole).SingleOrDefaultAsync(e => e.Id == id);
+            return EmployeeMapper.MapEmployeeToModel(await UnitOfWork.Employees.Include(e => e.JobRole).SingleOrDefaultAsync(e => e.Id == id));
         }
 
-        public Task AddAsync(Employee employee)
+        public Task AddAsync(EmployeeModel employeeModel)
         {
-            UnitOfWork.Employees.Add(employee);
+            UnitOfWork.Employees.Add(EmployeeMapper.MapModelToEmployee(employeeModel));
 
-            return Task.FromResult(1);
+            return Task.CompletedTask;
         }
 
-        public Task SetAsync(Employee employee)
+        public Task SetAsync(EmployeeModel employeeModel)
         {
-            UnitOfWork.Entry(employee).State = EntityState.Modified;
+            UnitOfWork.Entry(EmployeeMapper.MapModelToEmployee(employeeModel)).State = EntityState.Modified;
 
-            return Task.FromResult(1);
+            return Task.CompletedTask;
         }
 
-        public Task RemoveAsync(Employee employee)
+        public Task RemoveAsync(EmployeeModel employeeModel)
         {
+            Employee employee = EmployeeMapper.MapModelToEmployee(employeeModel);
+
             UnitOfWork.Employees.Attach(employee);
             UnitOfWork.Employees.Remove(employee);
 
-            return Task.FromResult(1);
+            return Task.CompletedTask;
         }
     }
 }

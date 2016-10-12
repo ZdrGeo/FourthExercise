@@ -10,8 +10,8 @@ namespace FourthExercise.Infrastructure.Repositories
 {
     public interface IWriteEmployeeRepository : IEnlistableRepository
     {
-        Task AddAsync(Employee employee);
-        Task SetAsync(Employee employee);
-        Task RemoveAsync(Employee employee);
+        Task AddAsync(EmployeeModel employeeModel);
+        Task SetAsync(EmployeeModel employeeModel);
+        Task RemoveAsync(EmployeeModel employeeModel);
     }
 }

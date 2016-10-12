@@ -11,7 +11,7 @@ namespace FourthExercise.Infrastructure.Repositories
 {
     public interface IReadEmployeeRepository : IEnlistableRepository
     {
-        Task<IEnumerable<Employee>> FindWithNameAsync(string name);
-        Task<Employee> GetAsync(int id);
+        Task<IEnumerable<EmployeeModel>> FindWithNameAsync(string name);
+        Task<EmployeeModel> GetAsync(int id);
     }
 }

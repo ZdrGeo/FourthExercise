@@ -30,18 +30,18 @@ namespace FourthExercise.Tests
         [TestMethod]
         public async Task TestChange()
         {
-            IEnumerable<Employee> employees = new List<Employee>();
+            IEnumerable<EmployeeModel> employeeModels = new List<EmployeeModel>();
 
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
                     readEmployeeRepository.Enlist(uow);
-                    employees = await readEmployeeRepository.FindWithNameAsync(name);
+                    employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
                     readEmployeeRepository.Delist();
                 }
             );
 
-            Assert.AreEqual(3, employees.ToList().Count);
+            Assert.AreEqual(3, employeeModels.ToList().Count);
         }
     }
 }
