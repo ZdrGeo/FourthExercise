@@ -41,7 +41,7 @@ namespace FourthExercise.Tests
                 }
             );
 
-            Assert.AreEqual(3, employeeModels.ToList().Count);
+            Assert.AreEqual(0, employeeModels.ToList().Count);
         }
     }
 }
