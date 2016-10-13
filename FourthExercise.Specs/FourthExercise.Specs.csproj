@@ -35,7 +35,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="TechTalk.SpecFlow, Version=2.1.0.0, Culture=neutral, PublicKeyToken=0778194805d6db41, processorArchitecture=MSIL">
       <HintPath>..\packages\SpecFlow.2.1.0\lib\net45\TechTalk.SpecFlow.dll</HintPath>
       <Private>True</Private>
@@ -54,6 +63,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Steps\CreateEmployeeSteps.cs" />
     <Compile Include="Features\CreateEmployee.feature.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -61,7 +71,24 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\FourthExercise.Infrastructure.Entity\FourthExercise.Infrastructure.Entity.csproj">
+      <Project>{2f9fec6d-52d9-4bbc-af49-b35fdbc75ba7}</Project>
+      <Name>FourthExercise.Infrastructure.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FourthExercise.Infrastructure\FourthExercise.Infrastructure.csproj">
+      <Project>{9156f42d-7223-4b8b-b2c2-bb1b1c28065f}</Project>
+      <Name>FourthExercise.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FourthExercise.Models\FourthExercise.Models.csproj">
+      <Project>{3414905d-5ead-4851-a535-9bb69afbb8c8}</Project>
+      <Name>FourthExercise.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FourthExercise\FourthExercise.csproj">
+      <Project>{613701f5-61fd-4d1f-9959-e08fdcd0618b}</Project>
+      <Name>FourthExercise</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Features\CreateEmployee.feature">

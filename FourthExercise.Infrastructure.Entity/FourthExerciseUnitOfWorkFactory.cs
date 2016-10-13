@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using System.Data.Entity;
+using System.Transactions;
 
 namespace FourthExercise.Infrastructure.Entity
 {
@@ -26,6 +27,23 @@ namespace FourthExercise.Infrastructure.Entity
             await action(unitOfWork);
 
             if (unitOfWork.IsCompleted) { await context.SaveChangesAsync(); }
+
+            // This should be the implementation in case that we need distributed transaction
+            /*
+            using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                UnitOfWork unitOfWork = new UnitOfWork();
+
+                await action(unitOfWork);
+
+                if (unitOfWork.IsCompleted)
+                {
+                    await context.SaveChangesAsync();
+
+                    transactionScope.Complete();
+                }
+            }
+            */
         }
     }
 }

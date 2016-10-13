@@ -10,11 +10,13 @@ using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity;
 using FourthExercise.Infrastructure.Entity.Repositories;
 
-namespace FourthExercise.Tests
+namespace FourthExercise.Tests.Integration
 {
     [TestClass]
     public class JobRoleRepositoryTest
     {
+        private const int seededJobRolesCount = 3;
+
         private IReadJobRoleRepository readJobRoleRepository;
 
         [TestInitialize]
@@ -25,12 +27,13 @@ namespace FourthExercise.Tests
             readJobRoleRepository = new JobRoleRepository(context);
         }
 
+        [TestCategory("Integration")]
         [TestMethod]
         public async Task TestGetAll()
         {
             IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
-            Assert.AreEqual(3, jobRoleModels.ToList().Count);
+            Assert.AreEqual(seededJobRolesCount, jobRoleModels.ToList().Count);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace FourthExercise.Infrastructure.Entity
             Database.SetInitializer(new FourthExerciseInitializer());
         }
 
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<JobRole> JobRoles { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<JobRole> JobRoles { get; set; }
     }
 }
