@@ -25,6 +25,7 @@ namespace FourthExercise.Models
 
         public JobRoleModel JobRole { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:0}")]
         public decimal Salary { get; set; }
     }
 }
