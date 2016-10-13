@@ -12,9 +12,9 @@ using FourthExercise.Infrastructure.Entity.Models;
 
 namespace FourthExercise.Infrastructure.Entity.Mappers
 {
-    internal static class JobRoleMapper
+    public class JobRoleMapper : IJobRoleMapper
     {
-        public static JobRoleModel MapJobRoleToModel(JobRole jobRole)
+        public JobRoleModel MapJobRoleToModel(JobRole jobRole)
         {
             if (jobRole == null) { return null; }
 
@@ -26,7 +26,7 @@ namespace FourthExercise.Infrastructure.Entity.Mappers
             return jobRoleModel;
         }
 
-        public static JobRole MapModelToJobRole(JobRoleModel jobRoleModel)
+        public JobRole MapModelToJobRole(JobRoleModel jobRoleModel)
         {
             if (jobRoleModel == null) { return null; }
 

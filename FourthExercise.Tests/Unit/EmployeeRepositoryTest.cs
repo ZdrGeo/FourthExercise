@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -12,26 +14,23 @@ using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity;
 using FourthExercise.Infrastructure.Entity.Models;
+using FourthExercise.Infrastructure.Entity.Mappers;
 using FourthExercise.Infrastructure.Entity.Repositories;
 using FourthExercise.Tests.Msdn;
-using System.Data.Entity.Infrastructure;
 
 namespace FourthExercise.Tests.Unit
 {
     [TestClass]
     public class EmployeeRepositoryTest
     {
-        private const string name = "Pet";
-
-        [TestInitialize]
-        public void Initialize()
-        {
-        }
+        private const string testEmployeeName = "Pet";
 
         [TestCategory("Unit")]
         [TestMethod]
-        public async Task TestFindWithName()
+        public async Task Employee_FindWithName_InIsolation()
         {
+            // Arrange
+
             List<JobRole> jobRoles = new List<JobRole>()
             {
                 new JobRole() { Id = 1, Name = "Employee" },
@@ -77,12 +76,19 @@ namespace FourthExercise.Tests.Unit
             contextMock.Setup(m => m.Employees).Returns(employeesMock.Object);
 
             IUnitOfWorkFactory unitOfWorkFactory = new FourthExerciseUnitOfWorkFactory(contextMock.Object);
-            IReadEmployeeRepository readEmployeeRepository = new EmployeeRepository(contextMock.Object);
-            IWriteEmployeeRepository writeEmployeeRepository = new EmployeeRepository(contextMock.Object);
+            IJobRoleMapper jobRoleMapper = new JobRoleMapper();
+            IEmployeeMapper employeeMapper = new EmployeeMapper(jobRoleMapper);
+            EmployeeRepository employeeRepository = new EmployeeRepository(contextMock.Object, employeeMapper);
+            IReadEmployeeRepository readEmployeeRepository = employeeRepository;
+            IWriteEmployeeRepository writeEmployeeRepository = employeeRepository;
 
-            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
+            // Act
 
-            bool all = employeeModels.All(em => em.FirstName.Contains(name) || em.LastName.Contains(name));
+            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(testEmployeeName);
+
+            // Assert
+
+            bool all = employeeModels.All(em => em.FirstName.Contains(testEmployeeName) || em.LastName.Contains(testEmployeeName));
 
             Assert.IsTrue(all);
         }

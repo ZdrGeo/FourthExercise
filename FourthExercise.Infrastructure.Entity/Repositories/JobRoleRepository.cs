@@ -14,18 +14,21 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
 {
     public class JobRoleRepository : IReadJobRoleRepository
     {
-        public JobRoleRepository(FourthExerciseContext context)
+        public JobRoleRepository(FourthExerciseContext context, IJobRoleMapper jobRoleMapper)
         {
             if (context == null) { throw new ArgumentNullException("context"); }
+            if (jobRoleMapper == null) { throw new ArgumentNullException("jobRoleMapper"); }
 
             this.context = context;
+            this.jobRoleMapper = jobRoleMapper;
         }
 
         private FourthExerciseContext context;
+        private IJobRoleMapper jobRoleMapper;
 
         public async Task<IEnumerable<JobRoleModel>> GetAllAsync()
         {
-            return (await context.JobRoles.AsNoTracking().ToListAsync()).Select(jr => JobRoleMapper.MapJobRoleToModel(jr));
+            return (await context.JobRoles.AsNoTracking().ToListAsync()).Select(jr => jobRoleMapper.MapJobRoleToModel(jr));
         }
     }
 }

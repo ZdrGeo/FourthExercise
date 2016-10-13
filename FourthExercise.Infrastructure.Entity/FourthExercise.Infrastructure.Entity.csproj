@@ -54,6 +54,8 @@
     <Compile Include="FourthExerciseContext.cs" />
     <Compile Include="FourthExerciseInitializer.cs" />
     <Compile Include="Mappers\EmployeeMapper.cs" />
+    <Compile Include="Mappers\IEmployeeMapper.cs" />
+    <Compile Include="Mappers\IJobRoleMapper.cs" />
     <Compile Include="Mappers\JobRoleMapper.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\JobRole.cs" />

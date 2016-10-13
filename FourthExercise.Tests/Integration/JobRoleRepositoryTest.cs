@@ -8,6 +8,7 @@ using FourthExercise.Models;
 using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity;
+using FourthExercise.Infrastructure.Entity.Mappers;
 using FourthExercise.Infrastructure.Entity.Repositories;
 
 namespace FourthExercise.Tests.Integration
@@ -15,16 +16,20 @@ namespace FourthExercise.Tests.Integration
     [TestClass]
     public class JobRoleRepositoryTest
     {
-        private const int seededJobRolesCount = 3;
+        public JobRoleRepositoryTest()
+        {
+            jobRoleMapper = new JobRoleMapper();
+        }
 
+        private FourthExerciseContext context;
+        private IJobRoleMapper jobRoleMapper;
         private IReadJobRoleRepository readJobRoleRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            FourthExerciseContext context = new FourthExerciseContext();
-
-            readJobRoleRepository = new JobRoleRepository(context);
+            context = new FourthExerciseContext();
+            readJobRoleRepository = new JobRoleRepository(context, jobRoleMapper);
         }
 
         [TestCategory("Integration")]
@@ -33,7 +38,7 @@ namespace FourthExercise.Tests.Integration
         {
             IEnumerable<JobRoleModel> jobRoleModels = await readJobRoleRepository.GetAllAsync();
 
-            Assert.AreEqual(seededJobRolesCount, jobRoleModels.ToList().Count);
+            Assert.AreEqual(FourthExerciseSeed.JobRoles.Count, jobRoleModels.ToList().Count);
         }
     }
 }

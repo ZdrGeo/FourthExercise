@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -12,72 +14,84 @@ using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity;
 using FourthExercise.Infrastructure.Entity.Models;
+using FourthExercise.Infrastructure.Entity.Mappers;
 using FourthExercise.Infrastructure.Entity.Repositories;
-using FourthExercise.Tests.Msdn;
-using System.Data.Entity.Infrastructure;
 
 namespace FourthExercise.Tests.Integration
 {
-    public enum SeededJobRoleId
-    {
-        Employee = 1,
-        Manager = 2,
-        ManagersManager = 3
-    }
-
     [TestClass]
     public class EmployeeRepositoryTest
     {
-        private const int seededEmployeeId = 1;
-        private const string name = "Z";
+        public EmployeeRepositoryTest()
+        {
+            jobRoleMapper = new JobRoleMapper();
+            employeeMapper = new EmployeeMapper(jobRoleMapper);
+        }
 
+        private readonly int testEmployeeId = FourthExerciseSeed.Employees.First().Id;
+        private const string testEmployeeName = "Pet";
+
+        private FourthExerciseContext context;
         private IUnitOfWorkFactory unitOfWorkFactory;
+        private IJobRoleMapper jobRoleMapper;
+        private IEmployeeMapper employeeMapper;
         private IReadEmployeeRepository readEmployeeRepository;
         private IWriteEmployeeRepository writeEmployeeRepository;
 
         [TestInitialize]
         public void Initialize()
         {
-            FourthExerciseContext context = new FourthExerciseContext();
-
+            context = new FourthExerciseContext();
             unitOfWorkFactory = new FourthExerciseUnitOfWorkFactory(context);
-            readEmployeeRepository = new EmployeeRepository(context);
-            writeEmployeeRepository = new EmployeeRepository(context);
+            EmployeeRepository employeeRepository = new EmployeeRepository(context, employeeMapper);
+            readEmployeeRepository = employeeRepository;
+            writeEmployeeRepository = employeeRepository;
         }
 
         [TestMethod]
-        [Ignore]
-        public async Task TestFindWithName()
+        public async Task Employee_FindWithName()
         {
-            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(seededEmployeeId);
+            // Arrange
 
-            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(name);
+            // Act
 
-            Assert.AreEqual(seededEmployeeId, employeeModel.Id);
-            // Assert.AreEqual(0, employeeModels.ToList().Count);
+            IEnumerable<EmployeeModel> employeeModels = await readEmployeeRepository.FindWithNameAsync(testEmployeeName);
+
+            // Assert
+
+            bool all = employeeModels.All(em => em.FirstName.Contains(testEmployeeName) || em.LastName.Contains(testEmployeeName));
+
+            Assert.IsTrue(all);
         }
 
 
         [TestMethod]
         [TestCategory("Integration")]
-        public async Task TestGet()
+        public async Task Employee_Get()
         {
-            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(seededEmployeeId);
+            // Arrange
 
-            Assert.AreEqual(seededEmployeeId, employeeModel.Id);
+            // Act
+
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(testEmployeeId);
+
+            // Assert
+
+            Assert.AreEqual(testEmployeeId, employeeModel.Id);
         }
 
         [TestCategory("Integration")]
         [TestMethod]
-        [Ignore]
-        public async Task TestSet()
+        public async Task Employee_Set()
         {
-            EmployeeModel employeeModel = new EmployeeModel()
-            {
-                Id = seededEmployeeId, FirstName = "Zdravko", LastName = "Georgiev", Email = "z_georgiev@applss.com", JobRoleId = (int)SeededJobRoleId.Employee, Salary = 4600
-            };
+            // Arrange
 
-            employeeModel.Id = 1;
+            EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(testEmployeeId);
+
+            employeeModel.FirstName = $"{employeeModel.FirstName}-{ Guid.NewGuid() }";
+
+            // Act
+
             await unitOfWorkFactory.WithAsync(
                 async uow =>
                 {
@@ -87,7 +101,11 @@ namespace FourthExercise.Tests.Integration
                 }
             );
 
-            // EmployeeModel employeeModel = await readEmployeeRepository.GetAsync(seededEmployeeId);
+            // Assert
+
+            EmployeeModel storedEmployeeModel = await readEmployeeRepository.GetAsync(testEmployeeId);
+
+            Assert.AreEqual(storedEmployeeModel.FirstName, employeeModel.FirstName);
         }
     }
 }

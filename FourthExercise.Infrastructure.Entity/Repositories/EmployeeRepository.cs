@@ -15,14 +15,17 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
 {
     public class EmployeeRepository : IReadEmployeeRepository, IWriteEmployeeRepository
     {
-        public EmployeeRepository(FourthExerciseContext context)
+        public EmployeeRepository(FourthExerciseContext context, IEmployeeMapper employeeMapper)
         {
             if (context == null) { throw new ArgumentNullException("context"); }
+            if (employeeMapper == null) { throw new ArgumentNullException("employeeMapper"); }
 
             this.context = context;
+            this.employeeMapper = employeeMapper;
         }
 
         private FourthExerciseContext context;
+        private IEmployeeMapper employeeMapper;
 
         public async Task<IEnumerable<EmployeeModel>> FindWithNameAsync(string name)
         {
@@ -33,31 +36,31 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
                 employees = employees.Where(e => e.FirstName.Contains(name) || e.LastName.Contains(name));
             }
                 
-            return (await employees.AsNoTracking().ToListAsync()).Select(e => EmployeeMapper.MapEmployeeToModel(e));
+            return (await employees.AsNoTracking().ToListAsync()).Select(e => employeeMapper.MapEmployeeToModel(e));
         }
 
         public async Task<EmployeeModel> GetAsync(int id)
         {
-            return EmployeeMapper.MapEmployeeToModel(await context.Employees.Include(e => e.JobRole).AsNoTracking().SingleOrDefaultAsync(e => e.Id == id));
+            return employeeMapper.MapEmployeeToModel(await context.Employees.Include(e => e.JobRole).AsNoTracking().SingleOrDefaultAsync(e => e.Id == id));
         }
 
         public Task AddAsync(EmployeeModel employeeModel)
         {
-            context.Employees.Add(EmployeeMapper.MapModelToEmployee(employeeModel));
+            context.Employees.Add(employeeMapper.MapModelToEmployee(employeeModel));
 
             return Task.CompletedTask;
         }
 
         public Task SetAsync(EmployeeModel employeeModel)
         {
-            context.Entry(EmployeeMapper.MapModelToEmployee(employeeModel)).State = EntityState.Modified;
+            context.Entry(employeeMapper.MapModelToEmployee(employeeModel)).State = EntityState.Modified;
 
             return Task.CompletedTask;
         }
 
         public Task RemoveAsync(EmployeeModel employeeModel)
         {
-            Employee employee = EmployeeMapper.MapModelToEmployee(employeeModel);
+            Employee employee = employeeMapper.MapModelToEmployee(employeeModel);
 
             context.Employees.Attach(employee);
             context.Employees.Remove(employee);

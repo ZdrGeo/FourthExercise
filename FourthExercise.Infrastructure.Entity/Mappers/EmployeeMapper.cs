@@ -12,9 +12,18 @@ using FourthExercise.Infrastructure.Entity.Models;
 
 namespace FourthExercise.Infrastructure.Entity.Mappers
 {
-    internal static class EmployeeMapper
+    public class EmployeeMapper : IEmployeeMapper
     {
-        public static EmployeeModel MapEmployeeToModel(Employee employee)
+        public EmployeeMapper(IJobRoleMapper jobRoleMapper)
+        {
+            if (jobRoleMapper == null) { throw new ArgumentNullException("jobRoleMapper"); }
+
+            this.jobRoleMapper = jobRoleMapper;
+        }
+
+        private IJobRoleMapper jobRoleMapper;
+
+        public EmployeeModel MapEmployeeToModel(Employee employee)
         {
             if (employee == null) { return null; }
 
@@ -25,13 +34,13 @@ namespace FourthExercise.Infrastructure.Entity.Mappers
             employeeModel.LastName = employee.LastName;
             employeeModel.Email = employee.Email;
             employeeModel.JobRoleId = employee.JobRoleId;
-            employeeModel.JobRole = JobRoleMapper.MapJobRoleToModel(employee.JobRole);
+            employeeModel.JobRole = jobRoleMapper.MapJobRoleToModel(employee.JobRole);
             employeeModel.Salary = employee.Salary;
 
             return employeeModel;
         }
 
-        public static Employee MapModelToEmployee(EmployeeModel employeeModel)
+        public Employee MapModelToEmployee(EmployeeModel employeeModel)
         {
             if (employeeModel == null) { return null; }
 
@@ -42,7 +51,7 @@ namespace FourthExercise.Infrastructure.Entity.Mappers
             employee.LastName = employeeModel.LastName;
             employee.Email = employeeModel.Email;
             employee.JobRoleId = employeeModel.JobRoleId;
-            employee.JobRole = JobRoleMapper.MapModelToJobRole(employeeModel.JobRole);
+            employee.JobRole = jobRoleMapper.MapModelToJobRole(employeeModel.JobRole);
             employee.Salary = employeeModel.Salary;
 
             return employee;

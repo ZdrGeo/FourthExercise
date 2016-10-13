@@ -10,6 +10,7 @@ using FourthExercise.Services;
 using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity;
+using FourthExercise.Infrastructure.Entity.Mappers;
 using FourthExercise.Infrastructure.Entity.Repositories;
 
 namespace FourthExercise
@@ -28,12 +29,14 @@ namespace FourthExercise
             containerBuilder.RegisterFilterProvider();
 
             containerBuilder.RegisterType<FourthExerciseContext>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<FourthExerciseUnitOfWorkFactory>().As<IUnitOfWorkFactory>();
-            containerBuilder.RegisterType<JobRoleRepository>().As<IReadJobRoleRepository>();
-            containerBuilder.RegisterType<EmployeeRepository>().As<IReadEmployeeRepository>().As<IWriteEmployeeRepository>();
-            containerBuilder.RegisterType<CreateEmployeeService>().As<ICreateEmployeeService>();
-            containerBuilder.RegisterType<ChangeEmployeeService>().As<IChangeEmployeeService>();
-            containerBuilder.RegisterType<DeleteEmployeeService>().As<IDeleteEmployeeService>();
+            containerBuilder.RegisterType<FourthExerciseUnitOfWorkFactory>().As<IUnitOfWorkFactory>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<JobRoleMapper>().As<IJobRoleMapper>().SingleInstance();
+            containerBuilder.RegisterType<EmployeeMapper>().As<IEmployeeMapper>().SingleInstance();
+            containerBuilder.RegisterType<JobRoleRepository>().As<IReadJobRoleRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<EmployeeRepository>().As<IReadEmployeeRepository>().As<IWriteEmployeeRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<CreateEmployeeService>().As<ICreateEmployeeService>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ChangeEmployeeService>().As<IChangeEmployeeService>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<DeleteEmployeeService>().As<IDeleteEmployeeService>().InstancePerLifetimeScope();
 
             IContainer container = containerBuilder.Build();
 
