@@ -21,7 +21,7 @@ namespace FourthExercise.Infrastructure.Entity
 
         private FourthExerciseContext context;
 
-        private void RejectChanges()
+        private async Task RejectChangesAsync()
         {
             foreach (DbEntityEntry entry in context.ChangeTracker.Entries())
             {
@@ -34,7 +34,7 @@ namespace FourthExercise.Infrastructure.Entity
                         entry.State = EntityState.Unchanged;
                         break;
                     case EntityState.Deleted:
-                        entry.Reload();
+                        await entry.ReloadAsync();
                         break;
                     default: break;
                 }
@@ -53,14 +53,14 @@ namespace FourthExercise.Infrastructure.Entity
             }
             else
             {
-                RejectChanges();
+                await RejectChangesAsync();
             }
 
             // This should be the implementation in case that we need distributed transaction
             /*
             using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                UnitOfWork unitOfWork = new UnitOfWork();
+                var unitOfWork = new UnitOfWork();
 
                 await action(unitOfWork);
 
@@ -72,7 +72,7 @@ namespace FourthExercise.Infrastructure.Entity
                 }
                 else
                 {
-                    RejectChanges();
+                    await RejectChangesAsync();
                 }
             }
             */
