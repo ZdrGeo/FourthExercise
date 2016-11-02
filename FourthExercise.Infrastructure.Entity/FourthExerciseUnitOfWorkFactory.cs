@@ -56,7 +56,6 @@ namespace FourthExercise.Infrastructure.Entity
                 await RejectChangesAsync();
             }
 
-            // This should be the implementation in case that we need distributed transaction
             /*
             using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
