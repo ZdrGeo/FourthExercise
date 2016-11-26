@@ -24,9 +24,7 @@ namespace FourthExercise.Infrastructure.Dapper
 
         public async Task WithAsync(Func<UnitOfWork, Task> action)
         {
-            bool close = false;
-            if (dbConnection.State == ConnectionState.Broken) { dbConnection.Close(); }
-            if (dbConnection.State == ConnectionState.Closed) { await dbConnection.OpenAsync(); close = true; }
+            bool close = await dbConnection.OpenIfNeededAsync();
 
             /*
             using (DbTransaction dbTransaction = dbConnection.BeginTransaction())
