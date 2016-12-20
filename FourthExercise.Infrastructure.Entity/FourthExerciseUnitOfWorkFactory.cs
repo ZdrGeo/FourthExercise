@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Transactions;
 using System.Data.Entity.Infrastructure;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Entity
 {
@@ -14,7 +15,7 @@ namespace FourthExercise.Infrastructure.Entity
     {
         public FourthExerciseUnitOfWorkFactory(FourthExerciseContext context)
         {
-            if (context == null) { throw new ArgumentNullException("context"); }
+            Check.NotNull(context, nameof(context));
 
             this.context = context;
         }

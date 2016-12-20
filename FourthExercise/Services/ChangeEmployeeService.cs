@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FourthExercise.Models;
 using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
+using Checks;
 
 namespace FourthExercise.Services
 {
@@ -14,8 +15,8 @@ namespace FourthExercise.Services
     {
         public ChangeEmployeeService(IUnitOfWorkFactory unitOfWorkFactory, IWriteEmployeeRepository writeEmployeeRepository)
         {
-            if (unitOfWorkFactory == null) { throw new ArgumentNullException("unitOfWorkFactory"); }
-            if (writeEmployeeRepository == null) { throw new ArgumentNullException("writeEmployeeRepository"); }
+            Check.NotNull(unitOfWorkFactory, nameof(unitOfWorkFactory));
+            Check.NotNull(writeEmployeeRepository, nameof(writeEmployeeRepository));
 
             this.unitOfWorkFactory = unitOfWorkFactory;
             this.writeEmployeeRepository = writeEmployeeRepository;

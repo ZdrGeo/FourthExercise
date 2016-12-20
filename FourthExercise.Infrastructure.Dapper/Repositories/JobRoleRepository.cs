@@ -10,6 +10,7 @@ using Dapper;
 
 using FourthExercise.Models;
 using FourthExercise.Infrastructure.Repositories;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Dapper.Repositories
 {
@@ -17,7 +18,7 @@ namespace FourthExercise.Infrastructure.Dapper.Repositories
     {
         public JobRoleRepository(DbConnection dbConnection)
         {
-            if (dbConnection == null) { throw new ArgumentNullException("dbConnection"); }
+            Check.NotNull(dbConnection, nameof(dbConnection));
 
             this.dbConnection = dbConnection;
         }

@@ -9,6 +9,7 @@ using System.Data.Entity;
 using FourthExercise.Models;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity.Mappers;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Entity.Repositories
 {
@@ -16,8 +17,8 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
     {
         public JobRoleRepository(FourthExerciseContext context, IJobRoleMapper jobRoleMapper)
         {
-            if (context == null) { throw new ArgumentNullException("context"); }
-            if (jobRoleMapper == null) { throw new ArgumentNullException("jobRoleMapper"); }
+            Check.NotNull(context, nameof(context));
+            Check.NotNull(jobRoleMapper, nameof(jobRoleMapper));
 
             this.context = context;
             this.jobRoleMapper = jobRoleMapper;

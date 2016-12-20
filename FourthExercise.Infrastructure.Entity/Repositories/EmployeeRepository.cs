@@ -10,6 +10,7 @@ using FourthExercise.Models;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity.Models;
 using FourthExercise.Infrastructure.Entity.Mappers;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Entity.Repositories
 {
@@ -17,8 +18,8 @@ namespace FourthExercise.Infrastructure.Entity.Repositories
     {
         public EmployeeRepository(FourthExerciseContext context, IEmployeeMapper employeeMapper)
         {
-            if (context == null) { throw new ArgumentNullException("context"); }
-            if (employeeMapper == null) { throw new ArgumentNullException("employeeMapper"); }
+            Check.NotNull(context, nameof(context));
+            Check.NotNull(employeeMapper, nameof(employeeMapper));
 
             this.context = context;
             this.employeeMapper = employeeMapper;

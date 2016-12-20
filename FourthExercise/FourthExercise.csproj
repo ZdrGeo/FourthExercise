@@ -472,6 +472,10 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Checks\Checks\Checks.csproj">
+      <Project>{8df9ba5a-cf2a-4a25-9590-d900e2604eab}</Project>
+      <Name>Checks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FourthExercise.Infrastructure.Dapper\FourthExercise.Infrastructure.Dapper.csproj">
       <Project>{44ded7a0-327e-468f-bb79-730f21a91aff}</Project>
       <Name>FourthExercise.Infrastructure.Dapper</Name>

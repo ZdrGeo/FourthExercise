@@ -56,6 +56,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Checks\Checks\Checks.csproj">
+      <Project>{8df9ba5a-cf2a-4a25-9590-d900e2604eab}</Project>
+      <Name>Checks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FourthExercise.Infrastructure\FourthExercise.Infrastructure.csproj">
       <Project>{9156f42d-7223-4b8b-b2c2-bb1b1c28065f}</Project>
       <Name>FourthExercise.Infrastructure</Name>

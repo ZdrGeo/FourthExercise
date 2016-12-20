@@ -9,6 +9,7 @@ using System.Data.Entity;
 using FourthExercise.Models;
 using FourthExercise.Infrastructure.Repositories;
 using FourthExercise.Infrastructure.Entity.Models;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Entity.Mappers
 {
@@ -16,7 +17,7 @@ namespace FourthExercise.Infrastructure.Entity.Mappers
     {
         public EmployeeMapper(IJobRoleMapper jobRoleMapper)
         {
-            if (jobRoleMapper == null) { throw new ArgumentNullException("jobRoleMapper"); }
+            Check.NotNull(jobRoleMapper, nameof(jobRoleMapper));
 
             this.jobRoleMapper = jobRoleMapper;
         }

@@ -11,6 +11,7 @@ using FourthExercise.Models;
 using FourthExercise.Services;
 using FourthExercise.Infrastructure;
 using FourthExercise.Infrastructure.Repositories;
+using Checks;
 
 namespace FourthExercise.Controllers
 {
@@ -24,11 +25,11 @@ namespace FourthExercise.Controllers
             IDeleteEmployeeService deleteEmployeeService
         )
         {
-            if (readJobRoleRepository == null) { throw new ArgumentNullException("readJobRoleRepository"); }
-            if (readEmployeeRepository == null) { throw new ArgumentNullException("readEmployeeRepository"); }
-            if (createEmployeeService == null) { throw new ArgumentNullException("createEmployeeService"); }
-            if (changeEmployeeService == null) { throw new ArgumentNullException("changeEmployeeService"); }
-            if (deleteEmployeeService == null) { throw new ArgumentNullException("deleteEmployeeService"); }
+            Check.NotNull(readJobRoleRepository, nameof(readJobRoleRepository));
+            Check.NotNull(readEmployeeRepository, nameof(readEmployeeRepository));
+            Check.NotNull(createEmployeeService, nameof(createEmployeeService));
+            Check.NotNull(changeEmployeeService, nameof(changeEmployeeService));
+            Check.NotNull(deleteEmployeeService, nameof(deleteEmployeeService));
 
             this.readJobRoleRepository = readJobRoleRepository;
             this.readEmployeeRepository = readEmployeeRepository;

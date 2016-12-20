@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 
 using Dapper;
+using Checks;
 
 namespace FourthExercise.Infrastructure.Dapper
 {
@@ -15,7 +16,7 @@ namespace FourthExercise.Infrastructure.Dapper
     {
         public FourthExerciseUnitOfWorkFactory(DbConnection dbConnection)
         {
-            if (dbConnection == null) { throw new ArgumentNullException("context"); }
+            Check.NotNull(dbConnection, nameof(dbConnection));
 
             this.dbConnection = dbConnection;
         }
