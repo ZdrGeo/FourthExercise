@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourthExercise.Specs", "Fou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourthExercise.Infrastructure.Dapper", "FourthExercise.Infrastructure.Dapper\FourthExercise.Infrastructure.Dapper.csproj", "{44DED7A0-327E-468F-BB79-730F21A91AFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checks", "..\Checks\Checks\Checks.csproj", "{8DF9BA5A-CF2A-4A25-9590-D900E2604EAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Checks", "Checks\Checks.csproj", "{8DF9BA5A-CF2A-4A25-9590-D900E2604EAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -64,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Checks\Checks\Checks.csproj">
+    <ProjectReference Include="..\Checks\Checks.csproj">
       <Project>{8df9ba5a-cf2a-4a25-9590-d900e2604eab}</Project>
       <Name>Checks</Name>
     </ProjectReference>
